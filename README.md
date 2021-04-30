@@ -66,6 +66,14 @@ mysql> exit
 
 Y se nos mostrara la lista de usuarios de MySQL, donde se encuentra el usuario root, con el que nos logeamos a MySQL.
 
+6. Instalacion de Crontab: Herramienta para calendarizacion de scripts de bash.
+
+```bash
+$ sudo apt update
+$ sudo apt install cron
+$ sudo systemctl enable cron
+```
+
 
 ### Carpeta de trabajo
 
