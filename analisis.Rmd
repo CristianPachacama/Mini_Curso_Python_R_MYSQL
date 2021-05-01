@@ -87,9 +87,12 @@ pip install scikit-learn
 pip install matplotlib
 ```
 
+Grafico de Componentes en `matplotlib`:
 
 ```{python}
 from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+import pandas as pd
 
 def acp(df, n_components=2):
     X = df.values
@@ -102,10 +105,24 @@ def acp(df, n_components=2):
     
     return df_acp,acp_fitted
 
-
+# Ejecucion ACP
 df_acp, acp_fitted = acp(r.df_x)
 
 ```
+
+
+```{python eval = FALSE}
+# Plot
+df = df_acp
+df['y'] = r.df_client['y']
+
+plt.figure()
+ax1 = df[df.y == "1"].plot.scatter(x="PC_1", y="PC_2", color="dodgerblue", label="Componente Principal 1")
+df[df.y == "0"].plot.scatter(x="PC_1", y="PC_2", color="crimson", label="Componente Principal 2", ax=ax1)
+plt.show()
+```
+
+
 
 
 ## Modelo de Clasificacion GLM
@@ -155,10 +172,22 @@ df_acp_new = acp_project(acp_fitted, r.df_new)
 Prediccion en base al modelo GLM:
 
 ```{r}
-df_new$y_pred = predict(model, py$df_acp_new)
+df_new$prob_pred = predict(model, py$df_acp_new, type = "response")
+df_new$y_pred = ifelse(df_new$prob_pred>0.5, "1", "0")
+df_new$y_pred = factor(df_new$y_pred)
 head(df_new)
 ```
 
+# Grafico en ggplot
+
+```{r}
+library(ggplot2)
+
+df_new %>% 
+  ggplot()+
+  geom_point(aes(x = saldo, y = mora, size = salario,color=y_pred))
+
+```
 
 
 
