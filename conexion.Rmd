@@ -120,8 +120,7 @@ CREATE TABLE nuevos_clientes(
     code VARCHAR(6),
     salario  VARCHAR(8),
     saldo DECIMAL(8,2),
-    mora DECIMAL(8,2),
-    y VARCHAR(2)
+    mora DECIMAL(8,2)
 );
 ```
 

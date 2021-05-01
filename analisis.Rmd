@@ -33,7 +33,7 @@ conn = dbConnect(MySQL(),  # MariaDB()
 
 
 
-## Limpieza
+## Limpieza (ETL)
 
 Supongamos que tenemos más experiencia con la libreria `dplyr` de r para la manipulacion de datos. Entonces,cargamos las tablas `clientes` y `nuevos_clientes` que cargamos antes en MySQL.
 
@@ -46,19 +46,28 @@ Creamos una rutina de limpieza de datos en codigo R.
 ```{r}
 library(dplyr)
 
-etl = function(df_client){
-  
-  df_client %>% 
+etl = function(df_client, train = TRUE){
+  if(train){
+    df_client %>% 
     select(-code) %>% 
     filter(salario != "NA") %>% 
     mutate(salario = as.numeric(salario),
            y = factor(y)) %>% 
     filter(!is.na(y) | !is.nan(y) | !is.infinite(y))-> df_client
-    return(df_client)
+  }else{
+    df_client %>% 
+    select(-code) %>% 
+    filter(salario != "NA") %>% 
+    mutate(salario = as.numeric(salario)) -> df_client
+  }
+  
+  return(df_client)
 }
   
 df_client = etl(df_client)
 
+# Regresoras
+df_x = df_client %>% select(-y)
 ```
 
 
@@ -67,7 +76,7 @@ summary(df_client)
 ```
 
 
-## ACP
+## Analis de componentes principales (ACP)
 
 Ahora, a fin de obtener variables regresoras independientes, ejecutamos un Analisis de Componentes Principales, es decir usamos las componenetes como variables regresoras del modelo clasificación. 
 
@@ -79,39 +88,76 @@ pip install matplotlib
 ```
 
 
-```{r}
+```{python}
+from sklearn.decomposition import PCA
+
+def acp(df, n_components=2):
+    X = df.values
+    acp_fitted = PCA(n_components=n_components)
+    principalComponents = acp_fitted.fit_transform(X)
+    var_names = ['PC_'+ str(k+1) for k in range(n_components)]
+    df_acp = pd.DataFrame(data = principalComponents,
+    columns = var_names)
+    print('PCA: Explained Ratio',acp_fitted.explained_variance_ratio_)
+    
+    return df_acp,acp_fitted
+
+
+df_acp, acp_fitted = acp(r.df_x)
 
 ```
 
 
-## Modelo de Clasificacion
+## Modelo de Clasificacion GLM
 
+Entrenamos el modelo de clasificacion Logit usando como regresoras las componentes principales halladas en el punto anterior.
 
 
 ```{r}
-model = glm(formula = y~., data = df_client, family = "binomial")
+# Data para modelo
+df_glm = py$df_acp
+df_glm$y = df_client$y
+
+# Ajuste de Modelo
+model = glm(formula = y~., data = df_glm, family = "binomial")
 summary(model)
 plot(model)
 ```
 
 ## Prediccion Nuevos Casos
 
+Primero descargamos desde MySQL los datos nuevos que desamos predecir a partir del modelo entrenado:
 
 ```{sql connection=conn, output.var="df_new"}
 SELECT * FROM nuevos_clientes;
 ```
 
+Luego ejecutamos el ETL de limpieza definido antes:
 
 ```{r}
-df_new = etl(df_new)
-y_pred = predict(model, df_new)
+df_new = etl(df_new,train = FALSE)
+head(df_new)
+```
+Luego generamos las regresoras (componentes principales) a partir del modelo de ACP entrenado antes.
+
+```{python}
+def acp_project(acp_fitted,df_new):
+  X_new = df_new.values
+  acp_projection = acp_fitted.transform(X_new)
+  var_names = ["PC_1","PC_2"]
+  df_acp_new = pd.DataFrame(data = acp_projection,columns = var_names)
+  return df_acp_new
+
+df_acp_new = acp_project(acp_fitted, r.df_new)
 ```
 
 
+Prediccion en base al modelo GLM:
 
-
-
-
+```{r}
+df_new$y_pred = predict(model, py$df_acp_new)
+head(df_new)
+```
 
 
 
