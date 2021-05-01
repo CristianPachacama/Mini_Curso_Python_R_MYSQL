@@ -1,0 +1,55 @@
+---
+title: "transformacion"
+author: "Cristian Pachacama"
+date: "4/30/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Transformacion de objetos (R - Python)
+
+
+```{r echo=FALSE}
+library(reticulate)
+use_python("env/bin/python")
+```
+
+
+Ejemplo: uso de variables entre python y r.
+
+```{python}
+# python
+x = 10
+```
+
+
+```{r}
+# R
+x = 22
+```
+
+
+## Desde R
+
+En el entorno de R, se puede acceder a objetos de python, por ejemplo:
+
+```{r}
+# R
+cat('x (python):',py$x)
+cat('x (r):',x)
+```
+
+## Desde Python
+
+Y viceversa, en el ambiente de python podemos acceder a los objetos definidos en r:
+
+```{python}
+# Python
+print('x (python):', x)
+print('x (r):', r.x)
+```
+

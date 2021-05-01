@@ -1,18 +1,62 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Analisis"
+author: "Cristian Pachacama"
+date: "4/30/2021"
+output: html_document
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
-```{r}
-plot(cars)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+```{r include=FALSE}
+library(reticulate)
+use_python("env/bin/python")
+```
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+## Conexion a MySQL
+
+```{r}
+library(DBI)
+library(RMySQL)
+#library(RMariaDB)
+
+conn = dbConnect(MySQL(),  # MariaDB()
+                 Driver="FreeTDS",
+                 user='root', 
+                 password='DemoSEE123_',
+                 dbname='demo_see', 
+                 host='localhost')
+
+```
+
+
+
+## Limpieza
+
+Supongamos que tenemos más experiencia con la libreria `dplyr` de r para la manipulacion de datos. Entonces,cargamos las tablas `clientes` y `nuevos_clientes` que cargamos antes en MySQL.
+
+```{sql connection=conn, output.var="df_client"}
+SELECT * FROM clientes;
+```
+
+
+```{r}
+library(dplyr)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

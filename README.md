@@ -54,17 +54,38 @@ Luego, se nos pedirá definir una clave de acceso para el usuario root de MySQL,
 Para corroborar que la instalación se realizó correctamente ejecutamos:
 
 ```bash
-sudo mysql
+$ sudo mysql
 ```
 
 Y se nos muestra el Shell de MySQL, este terminal admite comandos SQL, por ejemplo podemos ejecutar:
 
-```MySQL
+```mysql
 mysql> SELECT user FROM mysql.user;
-mysql> exit
 ```
 
-Y se nos mostrara la lista de usuarios de MySQL, donde se encuentra el usuario root, con el que nos logeamos a MySQL.
+Y se nos mostrara la lista de usuarios de MySQL, donde se encuentra el usuario root, con el que nos logeamos a MySQL. 
+Opcionalmente podemos cambiar la contraseña por una más segura, en este caso definiremos la contraseña `DemoSEE123_`
+
+```mysql
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'DemoSEE123_';
+mysql> FLUSH PRIVILEGES;
+```
+
+
+Ahora, creamos una base de datos que usaremos más adelante:
+
+```bash
+$ sudo mysql -p
+```
+
+```mysql
+CREATE DATABASE demo_see;
+USE demo_see;
+CREATE TABLE clientes;
+CREATE DEMO nuevos_clientes;
+```
+
+
 
 6. Instalacion de Crontab: Herramienta para calendarizacion de scripts de bash.
 
@@ -127,7 +148,7 @@ Una vez en el directorio, nos dirigimos al icomo:
  Así quedara seteada nuestra carpeta de trabajo en esta locación.
 
 
-### Notebook
+### Rmarkdown Notebook
 
 Pues bien, ahora podemos crear nuestro primer notebook de trabajo. Para ello vamos a la esquina superior izquerda de la interfaz y clicamos en el icono de ✅🗒️ (New File), debajo del boton `File`, aquí eleginos la opción `R Notebook`. La primera vez una ventana nos pide instalar unos paquetes adiciones, damos clic en aceptar y esperamos a que termine la instalacion en la Consola.
 

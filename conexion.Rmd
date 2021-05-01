@@ -1,0 +1,165 @@
+---
+title: "Análisis de Datos"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Python, R y MySQL
+
+Supongamos que necesitamos analizar los datos de clientes de una entidad financiera contenidos en el archivo `clientes.csv`, que tiene información de Salarios, Saldos Actuales en prestamos,  y días de mora en préstamos anteriores.
+
+## Carga de Datos
+
+Como era de esperarse una primera etapa consiste de leer la información utilizando alguna de las herramientas que conocemos. A continuación mostramos 3 posibles formas de analizar los datos con las herramientas que tenemos a la mano.
+
+### Carga en R
+
+```{r}
+library(readr)
+library(knitr)
+
+clientes_r = read_csv("data/clientes.csv")
+head(clientes_r)
+```
+
+
+### Carga en Python
+
+Para poder usar python dentro de un Notebook de Rmarkdown necesitamos usar le paquete `reticulate` de R. En este momento haremos uso del ambiente de python creado con anterioridad y ubicado en la carpeta `env/`.
+
+```{r eval=FALSE}
+install.packages("reticulate")
+```
+
+
+```{r}
+library(reticulate)
+use_python("env/bin/python")
+```
+Por otra parte, en el ambiente de python es necesario instalar el paquete `pandas`.
+
+```{bash eval = FALSE}
+pip install pandas
+```
+
+
+
+```{python}
+import pandas as pd
+
+clientes_py = pd.read_csv('data/clientes.csv')
+clientes_py.head()
+```
+
+### Carga en MySQL
+
+Para ello necesitamos instalar en el entorno de R el paquete `RMySQL`, que permite conectarnos a MySQL y ejecutar queries desde R.
+
+```{r eval = FALSE}
+install.packages("DBI")
+install.packages("RMariaDB")
+```
+
+
+```{r}
+library(DBI)
+library(RMySQL)
+#library(RMariaDB)
+
+conn = dbConnect(MySQL(),  # MariaDB()
+                 Driver="FreeTDS",
+                 user='root', 
+                 password='DemoSEE123_',
+                 dbname='demo_see', 
+                 host='localhost')
+
+```
+
+
+Cabe recalcar que para cargar un archivo en una base de datos de MySQL es necesario ponerlo en la ruta; `/var/lib/mysql-files/`, para ello ejecutamos lo siguiente en bash:
+
+
+```{bash eval=FALSE}
+sudo cp data/clientes.csv /var/lib/mysql-files/
+sudo cp data/nuevos_clientes.csv /var/lib/mysql-files/
+```
+
+### Tabla Clientes
+
+```{sql connection=conn, eval = FALSE}
+CREATE TABLE clientes(
+    code VARCHAR(6),
+    salario VARCHAR(8),
+    saldo DECIMAL(8,2),
+    mora DECIMAL(8,2),
+    y VARCHAR(2)
+);
+
+```
+
+
+```{sql connection = conn, eval = FALSE}
+LOAD DATA INFILE '/var/lib/mysql-files/clientes.csv'
+INTO TABLE clientes 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+```
+
+### Tabla nuevos_clientes
+
+
+```{sql connection=conn, eval = FALSE}
+CREATE TABLE nuevos_clientes(
+    code VARCHAR(6),
+    salario  VARCHAR(8),
+    saldo DECIMAL(8,2),
+    mora DECIMAL(8,2),
+    y VARCHAR(2)
+);
+```
+
+
+```{sql connection=conn, eval = FALSE}
+LOAD DATA INFILE '/var/lib/mysql-files/nuevos_clientes.csv'
+INTO TABLE nuevos_clientes 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+```
+
+Pues bien para este punto las dos tablas se encuentran en MySQL, en dos tablas, y puden ser usadas en los analisis que realicemos posteriormente.
+
+```{r}
+dbListTables(conn)
+```
+
+```{sql connection=conn}
+SELECT * FROM clientes LIMIT 10;
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
