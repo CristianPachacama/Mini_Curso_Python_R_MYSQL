@@ -41,11 +41,77 @@ Supongamos que tenemos más experiencia con la libreria `dplyr` de r para la man
 SELECT * FROM clientes;
 ```
 
+Creamos una rutina de limpieza de datos en codigo R.
 
 ```{r}
 library(dplyr)
 
+etl = function(df_client){
+  
+  df_client %>% 
+    select(-code) %>% 
+    filter(salario != "NA") %>% 
+    mutate(salario = as.numeric(salario),
+           y = factor(y)) %>% 
+    filter(!is.na(y) | !is.nan(y) | !is.infinite(y))-> df_client
+    return(df_client)
+}
+  
+df_client = etl(df_client)
+
 ```
+
+
+```{r}
+summary(df_client)
+```
+
+
+## ACP
+
+Ahora, a fin de obtener variables regresoras independientes, ejecutamos un Analisis de Componentes Principales, es decir usamos las componenetes como variables regresoras del modelo clasificación. 
+
+Realizamos este analisis con la libreria `sklearn` de python:
+
+```{bash eval=FALSE}
+pip install scikit-learn
+pip install matplotlib
+```
+
+
+```{r}
+
+```
+
+
+## Modelo de Clasificacion
+
+
+
+```{r}
+model = glm(formula = y~., data = df_client, family = "binomial")
+summary(model)
+plot(model)
+```
+
+## Prediccion Nuevos Casos
+
+
+```{sql connection=conn, output.var="df_new"}
+SELECT * FROM nuevos_clientes;
+```
+
+
+```{r}
+df_new = etl(df_new)
+y_pred = predict(model, df_new)
+```
+
+
+
+
+
+
 
 
 

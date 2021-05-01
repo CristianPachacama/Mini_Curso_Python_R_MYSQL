@@ -122,12 +122,22 @@ $ python3 -m venv env
 
 Hecho esto se crea un carpeta llamada `env/` que va a almacenar todos los paquetes y el interprete que nos permitirá ejecutar nuestro código python.
 
-## Datos
+
+### Instalacion paqueteria python
+
+Dentro del directorio de trabajo se encuentra el archivo `requirements.txt` que contiene la especificacion de los paquetes de python que se necesita instalar para ejecutar los notebooks.
+
+```bash
+$ source env/bin/activate
+$ pip install -r requirements.txt
+```
+
+
+
+# Demo: Rstudio Server
 
 A modo de ejemplo supongamos que queremos analizar datos de clientes de una entidad financiera que se encuentran en un archivo csv. Puede verlos en la carpeta `data/` que se encuentra en la carpeta de trabajo. 
 
-
-## Limpieza
 
 Una primera etapa y obvia es la limpieza de estos datos. Entonces usaremos las herramientas de python con ese objetivo. Para ello usaremos la interfaz de Rstudio. Es decir, abrimos en nuestro navegador:
 
@@ -148,10 +158,27 @@ Una vez en el directorio, nos dirigimos al icomo:
  Así quedara seteada nuestra carpeta de trabajo en esta locación.
 
 
-### Rmarkdown Notebook
+## Rmarkdown Notebook
 
 Pues bien, ahora podemos crear nuestro primer notebook de trabajo. Para ello vamos a la esquina superior izquerda de la interfaz y clicamos en el icono de ✅🗒️ (New File), debajo del boton `File`, aquí eleginos la opción `R Notebook`. La primera vez una ventana nos pide instalar unos paquetes adiciones, damos clic en aceptar y esperamos a que termine la instalacion en la Consola.
 
-Hecho esto se crea un archivo de Demo con codigo preparado, que podemos ejecutar, aunque primero es necesario guardar este archivo en nuestro directorio de trabajo. Una vez guardado ver el resultado del notebook clicando el icono celeste `Preview`,
+Hecho esto se crea un archivo de Demo con codigo preparado, que podemos ejecutar, aunque primero es necesario guardar este archivo en nuestro directorio de trabajo. Una vez guardado ver el resultado del notebook clicando el icono celeste `Preview`.
+
+
+## Ejemplos
+
+He incluido 3 notebooks con ejemplos del uso hibrido de R, Python y MySQL.
+
+- `transformacion.Rmd` : Ejemplo basico del uso de objetos entre lenguajes de programación.
+- `conexion.Rmd` : Ejemplo de carga de datos desde archivos CSV a distintos ambientes de trabajo.
+- `analisis.Rmd` : Ejemplo de rutina de analisis de datos (ETL, ACP, GLM)
+
+Observación: Hay que ejecutar estos notebooks en el mismo orden.
+
+
+
+
+
+
 
 
