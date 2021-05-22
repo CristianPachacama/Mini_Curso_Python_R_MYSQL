@@ -1,7 +1,7 @@
 ---
 title: "Analisis"
 author: "Cristian Pachacama"
-date: "4/30/2021"
+date: "`r Sys.Date()`"
 output: html_document
 ---
 
@@ -83,6 +83,7 @@ Ahora, a fin de obtener variables regresoras independientes, ejecutamos un Anali
 Realizamos este analisis con la libreria `sklearn` de python:
 
 ```{bash eval=FALSE}
+pip install pandas
 pip install scikit-learn
 pip install matplotlib
 ```

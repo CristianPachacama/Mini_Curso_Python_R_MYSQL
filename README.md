@@ -69,6 +69,7 @@ Opcionalmente podemos cambiar la contraseña por una más segura, en este caso d
 ```mysql
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'DemoSEE123_';
 mysql> FLUSH PRIVILEGES;
+mysql> exit
 ```
 
 
@@ -79,10 +80,11 @@ $ sudo mysql -p
 ```
 
 ```mysql
-CREATE DATABASE demo_see;
-USE demo_see;
-CREATE TABLE clientes;
-CREATE DEMO nuevos_clientes;
+mysql> CREATE DATABASE demo_see;
+mysql> USE demo_see;
+mysql> CREATE TABLE clientes;
+mysql> CREATE DEMO nuevos_clientes;
+mysql> exit
 ```
 
 
@@ -108,7 +110,7 @@ $ git clone https://github.com/CristianPachacama/Mini_Curso_Python_R_MYSQL
 
 ```
 
-Hecho esto se crea la carpeta Mini_Curso_Python_R_MYSQL dentro del directorio ProyectoSEE, con todo lo que necesitaremos a continuación.
+Hecho esto se crea la carpeta `Mini_Curso_Python_R_MYSQL` dentro del directorio `ProyectoSEE/`, con todo lo que necesitaremos a continuación.
 
 
 ### Ambiente trabajo Python
@@ -175,8 +177,25 @@ He incluido 3 notebooks con ejemplos del uso hibrido de R, Python y MySQL.
 
 Observación: Hay que ejecutar estos notebooks en el mismo orden.
 
+## Puesta en Produccion
 
+Finalmente, he incluido el script de python `ejecucion.py` que ejecuta y genera el reporte HTML contenido en `analisis.Rmd`, mismo que se puede calendarizar en bash usando la herramienta `crontab`.
 
+Para este ejemplo consideramos que el reporte se actualizará todos los días a las 09h00.
+
+Ejecutamos el comando de bash:
+
+```bash
+$ crontab -e
+```
+
+Y se habre un editor en el terminal (nano o nvim), donde escribimos:
+
+```bash
+0 9 * * * /home/nombre_usuario/ProyectoSEE/Mini_Curso_Python_R_MYSQL/env/bin/python /home/nombre_usuario/ProyectoSEE/Mini_Curso_Python_R_MYSQL/ejecucion.py
+```
+
+Si el editor es `nano`, usar el atajo `Control+X` para cerrar y `Y` para guardar los cambios. Si el editor era nvim usar `i` para editar el archivo anterior y el atajo `Esc` + `Esc` + `:` + `wq` para guardar los cambios y cerrar. Hecho esto, el archivo `ejecucion.py` se ejecutará todos los días a las 09h00 y guardara en distintas carpetas los reportes actualizados.
 
 
 
