@@ -136,7 +136,8 @@ $ pip install -r requirements.txt
 
 
 
-# Demo: Rstudio Server
+# Demo
+## Rstudio Server
 
 A modo de ejemplo supongamos que queremos analizar datos de clientes de una entidad financiera que se encuentran en un archivo csv. Puede verlos en la carpeta `data/` que se encuentra en la carpeta de trabajo. 
 
@@ -167,7 +168,7 @@ Pues bien, ahora podemos crear nuestro primer notebook de trabajo. Para ello vam
 Hecho esto se crea un archivo de Demo con codigo preparado, que podemos ejecutar, aunque primero es necesario guardar este archivo en nuestro directorio de trabajo. Una vez guardado ver el resultado del notebook clicando el icono celeste `Preview`.
 
 
-## Ejemplos
+## Analisis
 
 He incluido 3 notebooks con ejemplos del uso hibrido de R, Python y MySQL.
 
